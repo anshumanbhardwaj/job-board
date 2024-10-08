@@ -14,7 +14,7 @@ export const jobPostsTable = pgTable("job_posts", {
 });
 
 export const jobApplicationsTable = pgTable("job_applications", {
-  applicationId: text().primaryKey(),
+  id: text().primaryKey(),
   jobId: text()
     .notNull()
     .references(() => jobPostsTable.id),
@@ -24,3 +24,7 @@ export const jobApplicationsTable = pgTable("job_applications", {
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
+
+export type JobPost = typeof jobPostsTable.$inferInsert;
+
+export type JobApplication = typeof jobApplicationsTable.$inferInsert;

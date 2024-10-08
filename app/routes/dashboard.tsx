@@ -1,6 +1,8 @@
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { getAuth } from "@clerk/remix/ssr.server";
 import { Outlet } from "@remix-run/react";
+import { useUser } from "@clerk/remix";
+import { Separator } from "~/components/ui/separator";
 
 export const loader: LoaderFunction = async (args) => {
   // Use getAuth() to retrieve the user's ID
@@ -17,9 +19,15 @@ export const loader: LoaderFunction = async (args) => {
 };
 
 export default function Dashboard() {
+  const { user } = useUser();
   return (
-    <div>
-      Dashboard
+    <div className="w-full max-w-6xl mx-auto flex flex-col px-4 py-10">
+      <h1 className="text-3xl font-medium">Dashboard</h1>
+      <p>
+        Welcome {user?.primaryEmailAddress?.emailAddress} to your hiring
+        dashboard.
+      </p>
+      <Separator className="mt-2 mb-4" />
       <Outlet />
     </div>
   );
