@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS "job_posts" (
 	"description" text NOT NULL,
 	"company" text NOT NULL,
 	"company_website" text NOT NULL,
+	"user_id" text NOT NULL,
 	"location" text NOT NULL,
 	"salary" integer NOT NULL,
 	"created_at" text NOT NULL,
