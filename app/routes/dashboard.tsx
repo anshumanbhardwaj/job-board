@@ -24,7 +24,7 @@ export default function Dashboard() {
     <div className="w-full max-w-6xl mx-auto flex flex-col px-4 py-10">
       <h1 className="text-3xl font-medium">Dashboard</h1>
       <p>
-        Welcome {user?.primaryEmailAddress?.emailAddress} to your hiring
+        Hi {user?.primaryEmailAddress?.emailAddress}, welcome to your hiring
         dashboard.
       </p>
       <Separator className="mt-2 mb-4" />

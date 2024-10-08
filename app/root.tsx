@@ -26,6 +26,11 @@ export const links: LinksFunction = () => [
   },
 ];
 
+export const meta = () => [
+  {
+    title: "Job Board",
+  },
+];
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
