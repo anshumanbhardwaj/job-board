@@ -10,7 +10,8 @@
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc",
     "generate": "drizzle-kit generate",
-    "migrate": "drizzle-kit push"
+    "migrate": "drizzle-kit push",
+    "railway": "npm run migrate && npm run start"
   },
   "dependencies": {
     "@clerk/remix": "^4.2.35",
