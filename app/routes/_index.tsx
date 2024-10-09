@@ -21,7 +21,7 @@ export default function Index() {
       <div className="flex flex-row justify-between items-center">
         <h1 className="text-3xl font-medium">All Jobs</h1>
         <Button asChild>
-          <Link to="/dashboard/new">Post a job</Link>
+          <Link to="/dashboard">Post a job</Link>
         </Button>
       </div>
       <div className="grid grid-cols-2 gap-4 mt-10">

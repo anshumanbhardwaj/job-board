@@ -3,7 +3,9 @@ import { Label } from "@radix-ui/react-label";
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
+  unstable_composeUploadHandlers,
   unstable_createFileUploadHandler,
+  unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/node";
 import {
@@ -55,10 +57,12 @@ export async function action(args: ActionFunctionArgs) {
     file: () => `${jobId}/${appId}.pdf`, // return unique file name
   });
 
-  const body = await unstable_parseMultipartFormData(
-    request,
-    standardFileUploadHandler
+  const uploadHandler = unstable_composeUploadHandlers(
+    standardFileUploadHandler,
+    unstable_createMemoryUploadHandler()
   );
+
+  const body = await unstable_parseMultipartFormData(request, uploadHandler);
 
   try {
     await db.insert(jobApplicationsTable).values({

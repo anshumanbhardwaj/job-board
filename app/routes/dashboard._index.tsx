@@ -33,25 +33,29 @@ export default function Index() {
         </Button>
       </div>
       <div className="grid grid-cols-2 gap-4 mt-10">
-        {data.jobs.map((job) => (
-          <Link to={`/dashboard/${job.id}`} key={job.id}>
-            <Card>
-              <CardHeader>
-                <CardTitle>{job.title}</CardTitle>
-                <CardDescription className="flex flex-row space-x-4">
-                  <span>{job.company}</span>
-                  <span>{job.location}</span>
-                  <span>${job.salary} / month</span>
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground text-xs">
-                  Posted on {new Date(job.createdAt).toLocaleString()}
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+        {data.jobs.length ? (
+          data.jobs.map((job) => (
+            <Link to={`/dashboard/${job.id}`} key={job.id}>
+              <Card>
+                <CardHeader>
+                  <CardTitle>{job.title}</CardTitle>
+                  <CardDescription className="flex flex-row space-x-4">
+                    <span>{job.company}</span>
+                    <span>{job.location}</span>
+                    <span>${job.salary} / month</span>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground text-xs">
+                    Posted on {new Date(job.createdAt).toLocaleString()}
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+          ))
+        ) : (
+          <p>No jobs to show.</p>
+        )}
       </div>
     </div>
   );
