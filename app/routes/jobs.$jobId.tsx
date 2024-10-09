@@ -1,4 +1,3 @@
-import { getAuth } from "@clerk/remix/ssr.server";
 import { Label } from "@radix-ui/react-label";
 import {
   ActionFunctionArgs,
@@ -11,7 +10,6 @@ import {
 import {
   Form,
   Link,
-  redirect,
   useActionData,
   useLoaderData,
   useNavigation,
@@ -51,10 +49,6 @@ export async function loader(args: LoaderFunctionArgs) {
 }
 
 export async function action(args: ActionFunctionArgs) {
-  const { userId } = await getAuth(args);
-  if (!userId) {
-    return redirect("/sign-in");
-  }
   const { request } = args;
   const jobId = args.params.jobId;
   const appId = `app_${nanoid(16)}`;
