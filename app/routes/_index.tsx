@@ -1,4 +1,5 @@
 import { Link, useLoaderData } from "@remix-run/react";
+import { desc } from "drizzle-orm";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -12,7 +13,11 @@ import { db } from "~/db.server";
 import { jobPostsTable } from "~/db.server/schema";
 
 export async function loader() {
-  const jobs = await db.select().from(jobPostsTable);
+  const jobs = await db
+    .select()
+    .from(jobPostsTable)
+    .orderBy(desc(jobPostsTable.updatedAt))
+    .limit(20);
   return { jobs };
 }
 export default function Index() {
