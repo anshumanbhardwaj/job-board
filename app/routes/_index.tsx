@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { Separator } from "~/components/ui/separator";
 import { db } from "~/db.server";
 import { jobPostsTable } from "~/db.server/schema";
 
@@ -24,6 +25,7 @@ export default function Index() {
           <Link to="/dashboard">Post a job</Link>
         </Button>
       </div>
+      <Separator className="my-4" />
       <div className="grid grid-cols-2 gap-4 mt-10">
         {data.jobs.length ? (
           data.jobs.map((job) => (
