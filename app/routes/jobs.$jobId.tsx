@@ -28,6 +28,9 @@ import {
   jobApplicationsTable,
   jobPostsTable,
 } from "~/db.server/schema";
+import showdown from "showdown";
+
+const converter = new showdown.Converter();
 
 export async function loader(args: LoaderFunctionArgs) {
   const jobs = await db
@@ -40,7 +43,11 @@ export async function loader(args: LoaderFunctionArgs) {
     throw new Response("Job not found", { status: 404 });
   }
 
-  return { job: jobs[0] };
+  const job = jobs[0];
+
+  const content = converter.makeHtml(job.description);
+
+  return { job: { ...job, content } };
 }
 
 export async function action(args: ActionFunctionArgs) {
@@ -110,7 +117,10 @@ export default function JobDetailsPage() {
         Posted on {new Date(job.createdAt).toLocaleString()}
       </span>
       <Separator className="my-2" />
-      <div className="prose mt-4">{job.description}</div>
+      <div
+        className="prose mt-4"
+        dangerouslySetInnerHTML={{ __html: job.content }}
+      />
       <Separator className="my-4" />
       <h3 className="text-2xl">Apply for this role</h3>
       {actionData?.message ? (
