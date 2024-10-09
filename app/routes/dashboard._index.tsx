@@ -35,7 +35,7 @@ export default function Index() {
       <div className="grid grid-cols-2 gap-4 mt-10">
         {data.jobs.length ? (
           data.jobs.map((job) => (
-            <Link to={`/dashboard/${job.id}`} key={job.id}>
+            <Link to={`/dashboard/${job.id}/applicants`} key={job.id}>
               <Card>
                 <CardHeader>
                   <CardTitle>{job.title}</CardTitle>
