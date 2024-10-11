@@ -1,6 +1,7 @@
 import { Label } from "@radix-ui/react-label";
 import {
   ActionFunctionArgs,
+  HeadersFunction,
   LoaderFunctionArgs,
   unstable_composeUploadHandlers,
   unstable_createFileUploadHandler,
@@ -29,6 +30,12 @@ import {
 import showdown from "showdown";
 
 const converter = new showdown.Converter();
+
+export const headers: HeadersFunction = () => {
+  return {
+    "Cache-Control": "public, max-age=3600, s-maxage=3600", // cache for 1 hour
+  };
+};
 
 export async function loader(args: LoaderFunctionArgs) {
   const jobs = await db
