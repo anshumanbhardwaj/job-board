@@ -46,7 +46,6 @@ export default function NewJob() {
                     target="_blank"
                     rel="noreferrer"
                     to={`/dashboard/${jobId}/${applicant.id}/resume`}
-                    download={`${applicant.email}.pdf`}
                   >
                     Download resume
                   </Link>

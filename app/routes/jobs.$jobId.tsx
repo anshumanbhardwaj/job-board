@@ -2,6 +2,7 @@ import { Label } from "@radix-ui/react-label";
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
+  NodeOnDiskFile,
   unstable_composeUploadHandlers,
   unstable_createFileUploadHandler,
   unstable_createMemoryUploadHandler,
@@ -27,6 +28,18 @@ import {
   jobPostsTable,
 } from "~/db.server/schema";
 import showdown from "showdown";
+import { readFile, unlink } from "fs/promises";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: String(process.env.MINIO_ACCESS_KEY),
+    secretAccessKey: String(process.env.MINIO_SECRET_KEY),
+  },
+  region: "us-east-1",
+  endpoint: String(process.env.MINIO_ENDPOINT),
+  forcePathStyle: true,
+});
 
 const converter = new showdown.Converter();
 
@@ -53,19 +66,36 @@ export async function action(args: ActionFunctionArgs) {
   const jobId = args.params.jobId;
   const appId = `app_${nanoid(16)}`;
 
-  const standardFileUploadHandler = unstable_createFileUploadHandler({
-    directory: `resumes`,
-    file: () => `${jobId}/${appId}.pdf`, // return unique file name
-  });
-
-  const uploadHandler = unstable_composeUploadHandlers(
-    standardFileUploadHandler,
-    unstable_createMemoryUploadHandler()
-  );
-
-  const body = await unstable_parseMultipartFormData(request, uploadHandler);
+  const fileKey = `${jobId}/${appId}.pdf`;
 
   try {
+    const standardFileUploadHandler = unstable_createFileUploadHandler({
+      directory: `resumes`,
+      file: () => fileKey, // return unique file name
+    });
+
+    const uploadHandler = unstable_composeUploadHandlers(
+      standardFileUploadHandler,
+      unstable_createMemoryUploadHandler()
+    );
+
+    const body = await unstable_parseMultipartFormData(request, uploadHandler);
+
+    const resume = body.get("resume") as unknown as NodeOnDiskFile;
+
+    const fileObjectData = await readFile(resume.getFilePath());
+
+    // upload file to MinIO
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: String(process.env.MINIO_BUCKET),
+        Key: fileKey,
+        Body: fileObjectData,
+      })
+    );
+
+    // delete file from local disk
+    await unlink(resume.getFilePath());
     await db.insert(jobApplicationsTable).values({
       id: appId,
       applicantName: body.get("name"),
